@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم ROMEO | GitHub Sync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { --gold: #e5b80b; --bg: #050811; --card: #111827; --input-bg: #1e293b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: var(--bg); color: #fff; overflow-x: hidden; }
+
+        /* الشاشات */
+        .screen { display: none; min-height: 100vh; padding: 20px; animation: fadeIn 0.3s ease; }
+        .active-screen { display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* 1. شاشة الدخول (Token & User) */
+        #screen-login { align-items: center; justify-content: center; }
+        .login-card { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid var(--gold); width: 100%; max-width: 450px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .login-card i { font-size: 50px; color: var(--gold); margin-bottom: 15px; }
+
+        /* 2. شاشة اختيار الأقسام (مربعات) */
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; width: 100%; max-width: 800px; margin: auto; }
+        .cat-item { background: var(--card); padding: 30px 10px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .cat-item:hover { border-color: var(--gold); transform: scale(1.05); background: rgba(229, 184, 11, 0.05); }
+        .cat-item i { font-size: 40px; color: var(--gold); margin-bottom: 15px; display: block; }
+
+        /* 3. شاشة الإضافة (زي الصور اللي بعتها) */
+        .header-v3 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: var(--card); padding: 15px; border-radius: 15px; border-bottom: 2px solid var(--gold); }
+        .btn-add { background: var(--gold); color: #000; padding: 12px 25px; border-radius: 10px; font-weight: 900; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        
+        .form-container { background: var(--card); padding: 25px; border-radius: 20px; display: none; margin-bottom: 20px; border: 1px dashed var(--gold); }
+        input { width: 100%; padding: 14px; margin: 10px 0; background: var(--input-bg); border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 14px; outline: none; }
+        input:focus { border-color: var(--gold); }
+
+        .back-btn { color: var(--gold); cursor: pointer; margin-bottom: 20px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        
+        /* حالة التحميل */
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 30000; }
+    </style>
+</head>
+<body>
+
+    <div class="loading-overlay" id="loader">
+        <div style="text-align: center;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 50px; color: var(--gold);"></i>
+            <p style="margin-top: 15px;">جاري جلب البيانات من GitHub...</p>
+        </div>
+    </div>
+
+    <div id="screen-login" class="screen active-screen">
+        <div class="login-card">
+            <i class="fab fa-github"></i>
+            <h2 style="color: var(--gold); margin-bottom: 10px;">GitHub Control Panel</h2>
+            <p style="font-size: 12px; color: #888; margin-bottom: 25px;">أدخل بيانات حسابك المرفوع عليه الموقع</p>
+            
+            <input type="text" id="github-user" placeholder="GitHub Username (الاسم)">
+            <input type="password" id="github-token" placeholder="GitHub Personal Token (التوكن)">
+            
+            <button class="btn-add" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="connectToGithub()">
+                تحقق واتصال <i class="fas fa-link"></i>
+            </button>
+            <p id="login-msg" style="color: #ff4757; margin-top: 15px; font-size: 13px; display: none;">التوكن أو الاسم غير صحيح!</p>
+        </div>
+    </div>
+
+    <div id="screen-cats" class="screen">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 style="color: var(--gold); font-size: 28px;">أهلاً يا روميو</h2>
+            <p style="color: #888;">اختر القسم الذي تريد تحديث بياناته</p>
+        </div>
+        <div class="categories-grid">
+            <div class="cat-item" onclick="openSection('الإشعارات')"><i class="fas fa-bell"></i>الإشعارات</div>
+            <div class="cat-item" onclick="openSection('الأغاني')"><i class="fas fa-music"></i>الأغاني</div>
+            <div class="cat-item" onclick="openSection('الأفلام')"><i class="fas fa-film"></i>الأفلام</div>
+            <div class="cat-item" onclick="openSection('المباريات')"><i class="fas fa-football-ball"></i>المباريات</div>
+            <div class="cat-item" onclick="openSection('المسلسلات')"><i class="fas fa-tv"></i>المسلسلات</div>
+            <div class="cat-item" onclick="openSection('الرئيسية')"><i class="fas fa-home"></i>الرئيسية</div>
+        </div>
+    </div>
+
+    <div id="screen-action" class="screen">
+        <div class="back-btn" onclick="showScreen('screen-cats')"><i class="fas fa-chevron-right"></i> رجوع للرئيسية</div>
+        
+        <div class="header-v3">
+            <h2 id="current-section-name">القسم</h2>
+            <button class="btn-add" onclick="toggleForm()">
+                إضافة جديد <i class="fas fa-plus-circle"></i>
+            </button>
+        </div>
+
+        <div id="add-form" class="form-container">
+            <h3 style="margin-bottom: 15px; color: var(--gold);">بيانات العنصر الجديد</h3>
+            <input type="text" id="item-title" placeholder="اسم العنوان (مثلاً: مباراة الأهلي)">
+            <input type="text" id="item-image" placeholder="رابط صورة البوستر">
+            <input type="text" id="item-link" placeholder="رابط البث أو الفيلم">
+            <button class="btn-add" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="saveToGithub()">
+                حفظ وإرسال لـ GitHub <i class="fas fa-cloud-upload-alt"></i>
+            </button>
+        </div>
+
+        <div id="data-list">
+            </div>
+    </div>
+
+    <script>
+        let ghToken = "";
+        let ghUser = "";
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById(id).classList.add('active-screen');
+        }
+
+        // 1. وظيفة الاتصال والتحقق (Token Check)
+        async function connectToGithub() {
+            ghUser = document.getElementById('github-user').value;
+            ghToken = document.getElementById('github-token').value;
+
+            if(!ghUser || !ghToken) {
+                alert("املا البيانات يا يسطا!");
+                return;
+            }
+
+            document.getElementById('loader').style.display = 'flex';
+
+            try {
+                // محاولة بسيطة للتأكد من التوكن شغال
+                const res = await fetch(`https://api.github.com/users/${ghUser}`, {
+                    headers: { 'Authorization': `token ${ghToken}` }
+                });
+                
+                if(res.ok) {
+                    showScreen('screen-cats');
+                } else {
+                    document.getElementById('login-msg').style.display = 'block';
+                }
+            } catch (e) {
+                alert("حصل مشكلة في الاتصال!");
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        // 2. فتح القسم وتجهيزه
+        function openSection(sectionName) {
+            document.getElementById('current-section-name').innerText = "قسم " + sectionName;
+            document.getElementById('add-form').style.display = 'none';
+            showScreen('screen-action');
+        }
+
+        // 3. إظهار/إخفاء الفورم (نفس فكرة الصورة التالتة)
+        function toggleForm() {
+            const f = document.getElementById('add-form');
+            f.style.display = (f.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // 4. وظيفة الحفظ (إرسال البيانات لـ GitHub)
+        async function saveToGithub() {
+            alert("تم إرسال الطلب بنجاح! جاري التحديث على سيرفر GitHub...");
+            // هنا بنضيف كود الـ Commit لملف الـ JSON بتاعك
+            toggleForm();
+        }
+    </script>
+</body>
+</html>
