@@ -95,127 +95,8 @@
             padding: 12px; margin-bottom: 10px; border-left: 3px solid var(--accent-red);
         }
     </style>
-    <style id="romeo-github-final-styles">
-        /* تصميم الإعدادات شاشة كاملة */
-        #romeo-settings-v4 {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 25000; display: none;
-            flex-direction: column; padding: 50px 25px;
-        }
-        .v4-gold-brand {
-            color: #e5b80b; font-weight: 900; text-align: center; font-size: 28px;
-            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 40px;
-        }
-        .v4-info-container {
-            background: var(--card-color); border-radius: 25px; padding: 30px;
-            border: 1px solid rgba(229, 184, 11, 0.3); width: 100%;
-        }
-        .v4-data-row { font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
-        .v4-label { color: var(--accent-gold); font-weight: bold; margin-left: 10px; }
-        
-        .v4-btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-weight: 900; cursor: pointer; font-size: 16px; margin-top: 15px; }
-        .v4-btn-exit { background: var(--accent-red); color: white; }
-        .v4-btn-back { background: #222; color: #fff; border: 1px solid #444; }
-
-        /* تعديل الشريط السفلي ليدعم 6 أقسام بدقة */
-        .bottom-nav-fixed { gap: 2px !important; }
-        .nav-item-small { font-size: 8.5px !important; flex: 1; min-width: 0; }
-    </style>
 </head>
 <body>
-
-    <div id="romeo-settings-v4">
-        <div class="v4-gold-brand">ROMEO LIVE TV</div>
-        <div class="v4-info-container">
-            <div class="v4-data-row"><span class="v4-label">الاسم:</span> <span id="v4-display-name">جاري التحميل...</span></div>
-            <div class="v4-data-row" style="border:none;"><span class="v4-label">رقم الهاتف:</span> <span id="v4-display-phone">جاري التحميل...</span></div>
-        </div>
-        <div style="margin-top: auto;">
-            <button class="v4-btn v4-btn-exit" onclick="romeoV4Logout()">تسجيل خروج (الحساب)</button>
-            <button class="v4-btn v4-btn-back" onclick="closeRomeoSettingsV4()">إلغاء</button>
-        </div>
-    </div>
-
-    <script id="romeo-v4-logic-add-only">
-        (function() {
-            // وظيفة تعديل الواجهة والأقسام فور التحميل
-            function setupRomeoV4App() {
-                // 1. تعديل الهيدر (الاسم والإعدادات)
-                const header = document.querySelector('.app-header');
-                if(header) {
-                    header.innerHTML = `
-                        <div class="romeo-gold-shiny-v4" style="color:#e5b80b; font-weight:900; font-size:20px;">ROMEO LIVE TV</div>
-                        <i class="fas fa-cog" style="font-size:24px; color:#e5b80b; cursor:pointer;" onclick="openRomeoSettingsV4()"></i>
-                    `;
-                }
-
-                // 2. تعديل الشريط السفلي للأقسام الستة المطلوبة
-                const nav = document.querySelector('.bottom-nav');
-                if(nav) {
-                    nav.style.gap = "0";
-                    nav.innerHTML = `
-                        <a href="javascript:void(0)" class="nav-item active nav-item-small" onclick="switchTab('home', this)">
-                            <i class="fas fa-home"></i>الرئيسية
-                        </a>
-                        <a href="javascript:void(0)" class="nav-item nav-item-small" onclick="switchTab('matches', this)">
-                            <i class="fas fa-football-ball"></i>المباريات
-                        </a>
-                        <a href="javascript:void(0)" class="nav-item nav-item-small" onclick="switchTab('v4-music', this)">
-                            <i class="fas fa-music"></i>الأغاني
-                        </a>
-                        <a href="javascript:void(0)" class="nav-item nav-item-small" onclick="switchTab('v4-movies', this)">
-                            <i class="fas fa-film"></i>الأفلام
-                        </a>
-                        <a href="javascript:void(0)" class="nav-item nav-item-small" onclick="switchTab('v4-series', this)">
-                            <i class="fas fa-tv"></i>المسلسلات
-                        </a>
-                        <a href="javascript:void(0)" class="nav-item nav-item-small" onclick="switchTab('notifications', this)">
-                            <i class="fas fa-bell"></i>الإشعارات
-                        </a>
-                    `;
-                }
-
-                // 3. إضافة محتوى الأقسام الجديدة للـ Main
-                const main = document.querySelector('main');
-                if(main) {
-                    const newContent = [
-                        { id: 'v4-music', title: 'الأغاني والكليبات', txt: 'استمع وحمل أحدث الأغاني الحصرية.' },
-                        { id: 'v4-movies', title: 'الأفلام العالمية', txt: 'أحدث الأفلام بجودة 4K.' },
-                        { id: 'v4-series', title: 'المسلسلات الحصرية', txt: 'شاهد مسلسلاتك المفضلة بدون إعلانات.' }
-                    ];
-                    newContent.forEach(item => {
-                        const sec = document.createElement('section');
-                        sec.id = item.id; sec.className = 'view-section';
-                        sec.innerHTML = `<h4>${item.title}</h4><div class="promo-card"><p>${item.txt}</p><button class="btn-open" onclick="openExternal('https://romeo311020.github.io/romeo-live-tv-31/')">دخول القسم</button></div>`;
-                        main.appendChild(sec);
-                    });
-                }
-                
-                // إخفاء سينما القديم
-                if(document.getElementById('cinema')) document.getElementById('cinema').style.display = 'none';
-            }
-
-            // وظائف نظام الإعدادات
-            window.openRomeoSettingsV4 = function() {
-                document.getElementById('v4-display-name').innerText = localStorage.getItem('romeo_u_name') || 'زائر';
-                document.getElementById('v4-display-phone').innerText = localStorage.getItem('romeo_u_phone') || 'غير متاح';
-                document.getElementById('romeo-settings-v4').style.display = 'flex';
-            }
-
-            window.closeRomeoSettingsV4 = function() {
-                document.getElementById('romeo-settings-v4').style.display = 'none';
-            }
-
-            window.romeoV4Logout = function() {
-                localStorage.removeItem('romeo_logged_in');
-                location.reload();
-            }
-
-            window.addEventListener('load', setupRomeoV4App);
-        })();
-    </script>
 
     <header class="app-header">
         <div class="app-title">روميو لايف</div>
@@ -225,7 +106,7 @@
     <main>
         <section id="home" class="view-section active">
             <div class="promo-card">
-                <h3>مرحباً بك في ROMEO LIVE TV </h3>
+                <h3>مرحباً بك في تطبيق روميو</h3>
                 <p style="font-size: 13px; color: #ccc;">استمتع بمشاهدة حصرية للمباريات والأفلام بأعلى جودة.</p>
             </div>
             <h4>آخر الإضافات</h4>
@@ -281,10 +162,11 @@
         // إخفاء الـ Splash Screen بعد ثانيتين
         window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('splash-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('splash-screen').style.display = 'none';
-                }, 500);
+                const splash = document.getElementById('splash-screen');
+                if(splash) {
+                   splash.style.opacity = '0';
+                   setTimeout(() => splash.style.display = 'none', 500);
+                }
             }, 2000);
         });
 
@@ -307,14 +189,60 @@
         ];
 
         const container = document.getElementById('latest-items');
-        items.forEach(item => {
-            container.innerHTML += `
-                <div style="background: var(--card-color); border-radius: 10px; overflow: hidden;">
-                    <img src="${item.img}" style="width: 100%; height: 100px; object-fit: cover;">
-                    <div style="padding: 10px; font-size: 12px; text-align: center; font-weight: bold;">${item.name}</div>
-                </div>
-            `;
-        });
+        if(container) {
+            items.forEach(item => {
+                container.innerHTML += `
+                    <div style="background: var(--card-color); border-radius: 10px; overflow: hidden;">
+                        <img src="${item.img}" style="width: 100%; height: 100px; object-fit: cover;">
+                        <div style="padding: 10px; font-size: 12px; text-align: center; font-weight: bold;">${item.name}</div>
+                    </div>
+                `;
+            });
+        }
+    </script>
+
+    <script id="admin-panel-sync">
+        (function() {
+            // وظيفة جديدة لجلب البيانات من GitHub
+            async function syncWithRomeoAdmin() {
+                const GITHUB_JSON_URL = "https://raw.githubusercontent.com/romeo311020/ROMEO-LIVE-TV-/main/data.json";
+                
+                try {
+                    const response = await fetch(GITHUB_JSON_URL);
+                    if (!response.ok) return;
+                    const data = await response.json();
+                    
+                    const container = document.getElementById('latest-items');
+                    if (data.items && container) {
+                        // تفريغ المحتوى التجريبي ووضع بيانات لوحة التحكم
+                        container.innerHTML = ''; 
+                        data.items.forEach(item => {
+                            const cardHtml = `
+                                <div style="background: var(--card-color); border-radius: 10px; overflow: hidden; cursor: pointer;" onclick="openExternal('${item.link}')">
+                                    <img src="${item.img}" style="width: 100%; height: 100px; object-fit: cover;">
+                                    <div style="padding: 10px; font-size: 12px; text-align: center; font-weight: bold;">${item.name}</div>
+                                </div>
+                            `;
+                            container.insertAdjacentHTML('beforeend', cardHtml);
+                        });
+                    }
+                } catch (error) {
+                    console.error("خطأ في الاتصال بلوحة التحكم:", error);
+                }
+            }
+
+            // تشغيل المزامنة عند تحميل الصفحة
+            window.addEventListener('DOMContentLoaded', syncWithRomeoAdmin);
+            
+            // إضافة وظيفة تسجيل الخروج دون تعديل الكود القديم
+            window.addEventListener('click', function(e) {
+                if(e.target && (e.target.innerText === 'خروج' || e.target.innerText === 'تسجيل خروج')) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.reload();
+                }
+            });
+        })();
     </script>
 </body>
 </html>
