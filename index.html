@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ROMEO LIVE APP</title>
+    <title>ROMEO LIVE - Professional</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -12,237 +12,209 @@
             --bg-color: #040714;
             --card-color: #121826;
             --accent-gold: #e5b80b;
-            --accent-red: #ff3e3e;
             --text-color: #ffffff;
-            --nav-height: 65px;
+            --nav-height: 70px;
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Cairo', sans-serif;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); margin: 0; overflow-x: hidden; padding-bottom: 90px; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            overflow-x: hidden;
-            padding-bottom: var(--nav-height);
-        }
-
-        /* --- Splash Screen --- */
+        /* Splash Screen */
         #splash-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 9999;
-            transition: 0.5s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999; transition: 0.5s;
         }
-        .loader-logo {
-            font-size: 30px; font-weight: 900; color: white;
-            text-shadow: 0 0 20px rgba(229, 184, 11, 0.5);
-        }
-        .loader-logo span { color: var(--accent-red); }
 
-        /* --- App Header --- */
-        .app-header {
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-color);
-            position: sticky; top: 0; z-index: 100;
+        /* Header */
+        header {
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(4, 7, 20, 0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
         }
-        .app-title { font-weight: 900; font-size: 18px; }
+        .brand { font-size: 22px; font-weight: 900; color: var(--accent-gold); letter-spacing: 1px; }
+        .user-actions { display: flex; gap: 15px; align-items: center; }
+        .icon-btn { font-size: 20px; color: white; cursor: pointer; position: relative; }
 
-        /* --- View Sections --- */
-        .view-section { display: none; padding: 15px; animation: slideIn 0.3s ease-out; }
+        /* Banner */
+        .main-banner {
+            width: 92%; margin: 10px auto 25px; height: 180px; border-radius: 20px;
+            background: linear-gradient(45deg, #161d2f, #040714); overflow: hidden;
+            position: relative; border: 1px solid rgba(229, 184, 11, 0.2);
+        }
+        .main-banner img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+
+        /* الأقسام (View Sections) */
+        .view-section { display: none; padding: 0 15px; animation: fadeIn 0.4s ease; }
         .view-section.active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Cards UI --- */
-        .promo-card {
-            background: linear-gradient(45deg, #1e293b, #0f172a);
-            border-radius: 15px; padding: 20px; margin-bottom: 15px;
-            border-right: 4px solid var(--accent-gold);
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
         }
-        .btn-open {
-            background: var(--accent-gold); color: #000;
-            border: none; padding: 10px 20px; border-radius: 8px;
-            font-weight: bold; margin-top: 10px; cursor: pointer; width: 100%;
-        }
+        .section-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .section-title::before { content: ''; width: 4px; height: 18px; background: var(--accent-gold); border-radius: 2px; }
 
-        /* --- Bottom Navigation --- */
+        /* Grid System - نفس شكل الصورة */
+        .grid-container {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+        }
+        .item-card {
+            background: var(--card-color); border-radius: 12px; overflow: hidden;
+            transition: 0.3s; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;
+        }
+        .item-card:active { transform: scale(0.95); }
+        .item-card img { width: 100%; height: 110px; object-fit: cover; }
+        .item-card .info { padding: 8px; text-align: center; }
+        .item-card .name { font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Bottom Navigation */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            height: var(--nav-height); background: var(--card-color);
-            display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000;
+            position: fixed; bottom: 0; width: 100%; background: #10141e;
+            display: grid; grid-template-columns: repeat(6, 1fr); padding: 10px 5px;
+            border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000;
         }
         .nav-item {
-            color: #8e94a5; text-align: center; font-size: 10px;
-            text-decoration: none; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #717171; font-size: 10px; transition: 0.3s;
         }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
-        .nav-item.active { color: var(--accent-gold); transform: translateY(-5px); }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active { color: var(--accent-gold); }
 
-        /* --- Notification UI --- */
+        /* Notifications UI */
         .notif-item {
-            background: rgba(255,255,255,0.03); border-radius: 10px;
-            padding: 12px; margin-bottom: 10px; border-left: 3px solid var(--accent-red);
+            background: var(--card-color); padding: 15px; border-radius: 12px; margin-bottom: 10px;
+            border-right: 4px solid var(--accent-gold);
         }
     </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="app-title">روميو لايف</div>
-        <i class="fas fa-user-circle" style="font-size: 22px; color: var(--accent-gold);"></i>
+    <div id="splash-screen">
+        <h1 style="color:var(--accent-gold); font-size: 40px;">ROMEO</h1>
+        <div class="loader"></div>
+    </div>
+
+    <header>
+        <div class="brand">ROMEO LIVE</div>
+        <div class="user-actions">
+            <i class="fas fa-search icon-btn"></i>
+            <i class="fas fa-user-circle icon-btn" onclick="alert('حساب المستخدم قريباً')"></i>
+        </div>
     </header>
 
-    <main>
+    <main id="main-content">
         <section id="home" class="view-section active">
-            <div class="promo-card">
-                <h3>مرحباً بك في تطبيق روميو</h3>
-                <p style="font-size: 13px; color: #ccc;">استمتع بمشاهدة حصرية للمباريات والأفلام بأعلى جودة.</p>
-            </div>
-            <h4>آخر الإضافات</h4>
-            <div id="latest-items" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+            <div class="main-banner">
+                <img src="https://wallpaperaccess.com/full/229012.jpg" alt="Promo">
+                <div style="position:absolute; bottom:15px; right:15px;">
+                    <h2 style="margin:0; font-size:18px;">عالم الترفيه بين يديك</h2>
                 </div>
+            </div>
+            <div class="section-header"><div class="section-title">أحدث الإضافات</div></div>
+            <div class="grid-container" id="container-home"></div>
+        </section>
+
+        <section id="movies" class="view-section">
+            <div class="section-header"><div class="section-title">الأفلام الحصرية</div></div>
+            <div class="grid-container" id="container-movies"></div>
+        </section>
+
+        <section id="music" class="view-section">
+            <div class="section-header"><div class="section-title">أحدث الأغاني</div></div>
+            <div class="grid-container" id="container-music"></div>
+        </section>
+
+        <section id="series" class="view-section">
+            <div class="section-header"><div class="section-title">مسلسلات رمضان</div></div>
+            <div class="grid-container" id="container-series"></div>
+        </section>
+
+        <section id="notifs" class="view-section">
+            <div class="section-header"><div class="section-title">تنبيهات النظام</div></div>
+            <div id="container-notifs">
+                <div class="notif-item">أهلاً بك في تطبيق روميو لايف الجديد.</div>
+            </div>
         </section>
 
         <section id="matches" class="view-section">
-            <div class="promo-card" style="border-right-color: var(--accent-red);">
-                <h3>جدول مباريات اليوم</h3>
-                <p>تابع البث المباشر فور انطلاقه.</p>
-                <button class="btn-open" onclick="openExternal('https://romeo311020.github.io/romeo-live-tv-31/')">
-                    دخول لجدول المباريات <i class="fas fa-external-link-alt"></i>
-                </button>
-            </div>
-        </section>
-
-        <section id="cinema" class="view-section">
-            <h4>أفلام ومسلسلات حصرية</h4>
-            <div class="promo-card">
-                <p>قسم السينما متوفر الآن بأكثر من 5 سيرفرات مشاهدة.</p>
-                <button class="btn-open" onclick="openExternal('https://romeo311020.github.io/romeo-live-tv-31/')">
-                    مشاهدة الآن
-                </button>
-            </div>
-        </section>
-
-        <section id="notifications" class="view-section">
-            <h4>التنبيهات</h4>
-            <div class="notif-item">
-                <small style="color: var(--accent-gold);">منذ 5 دقائق</small>
-                <p style="font-size: 14px; font-weight: bold;">ماتش الأهلي بدأ الآن!</p>
-            </div>
+            <div class="section-header"><div class="section-title">جدول المباريات</div></div>
+            <div class="grid-container" id="container-matches"></div>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <a href="javascript:void(0)" class="nav-item active" onclick="switchTab('home', this)">
-            <i class="fas fa-home"></i>الرئيسية
-        </a>
-        <a href="javascript:void(0)" class="nav-item" onclick="switchTab('matches', this)">
-            <i class="fas fa-football-ball"></i>المباريات
-        </a>
-        <a href="javascript:void(0)" class="nav-item" onclick="switchTab('cinema', this)">
-            <i class="fas fa-film"></i>سينما
-        </a>
-        <a href="javascript:void(0)" class="nav-item" onclick="switchTab('notifications', this)">
-            <i class="fas fa-bell"></i>الإشعارات
-        </a>
+        <div class="nav-item active" onclick="showView('home', this)"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+        <div class="nav-item" onclick="showView('movies', this)"><i class="fas fa-film"></i><span>أفلام</span></div>
+        <div class="nav-item" onclick="showView('series', this)"><i class="fas fa-tv"></i><span>مسلسلات</span></div>
+        <div class="nav-item" onclick="showView('music', this)"><i class="fas fa-music"></i><span>أغاني</span></div>
+        <div class="nav-item" onclick="showView('matches', this)"><i class="fas fa-football-ball"></i><span>مباريات</span></div>
+        <div class="nav-item" onclick="showView('notifs', this)"><i class="fas fa-bell"></i><span>تنبيهات</span></div>
     </nav>
 
     <script>
-        // إخفاء الـ Splash Screen بعد ثانيتين
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if(splash) {
-                   splash.style.opacity = '0';
-                   setTimeout(() => splash.style.display = 'none', 500);
-                }
-            }, 2000);
-        });
-
-        // وظيفة تبديل الأقسام الأصلية
-        function switchTab(tabId, el) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        // 1. التحكم في الشاشات
+        function showView(viewId, el) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
             el.classList.add('active');
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            if (window.navigator.vibrate) window.navigator.vibrate(20);
+            window.scrollTo(0,0);
         }
 
-        function openExternal(url) {
-            window.location.href = url;
+        // 2. جلب البيانات من JSON وتوزيعها
+        async function fetchRomeoData() {
+            const url = "https://raw.githubusercontent.com/romeo311020/ROMEO-LIVE-TV-/main/data.json";
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if(data.items) {
+                    renderData(data.items);
+                }
+            } catch (e) { console.error("Data Fetch Error"); }
         }
 
-        const items = [
-            { name: "مباراة اليوم", img: "https://via.placeholder.com/150/ff3e3e/ffffff?text=Match" },
-            { name: "فيلم جديد", img: "https://via.placeholder.com/150/e5b80b/000000?text=Movie" }
-        ];
+        function renderData(items) {
+            const containers = {
+                home: document.getElementById('container-home'),
+                movies: document.getElementById('container-movies'),
+                music: document.getElementById('container-music'),
+                series: document.getElementById('container-series'),
+                matches: document.getElementById('container-matches')
+            };
 
-        const container = document.getElementById('latest-items');
-        if(container) {
+            // مسح أي بيانات قديمة
+            Object.values(containers).forEach(c => if(c) c.innerHTML = '');
+
             items.forEach(item => {
-                container.innerHTML += `
-                    <div style="background: var(--card-color); border-radius: 10px; overflow: hidden;">
-                        <img src="${item.img}" style="width: 100%; height: 100px; object-fit: cover;">
-                        <div style="padding: 10px; font-size: 12px; text-align: center; font-weight: bold;">${item.name}</div>
+                const card = `
+                    <div class="item-card" onclick="location.href='${item.link}'">
+                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/150/121826/ffffff?text=ROMEO'">
+                        <div class="info">
+                            <div class="name">${item.name}</div>
+                        </div>
                     </div>
                 `;
+
+                // إضافة للرئيسية (أحدث الإضافات)
+                containers.home.insertAdjacentHTML('beforeend', card);
+
+                // توزيع حسب التصنيف (Cat)
+                if(item.cat === 'live-matches') containers.matches.insertAdjacentHTML('beforeend', card);
+                else if(item.cat === 'egy-movies') containers.movies.insertAdjacentHTML('beforeend', card);
+                else if(item.cat === 'music-hits') containers.music.insertAdjacentHTML('beforeend', card);
+                else if(item.cat === 'ramadan') containers.series.insertAdjacentHTML('beforeend', card);
             });
         }
-    </script>
 
-    <script id="admin-panel-sync">
-        (function() {
-            // وظيفة جديدة لجلب البيانات من GitHub
-            async function syncWithRomeoAdmin() {
-                const GITHUB_JSON_URL = "https://raw.githubusercontent.com/romeo311020/ROMEO-LIVE-TV-/main/data.json";
-                
-                try {
-                    const response = await fetch(GITHUB_JSON_URL);
-                    if (!response.ok) return;
-                    const data = await response.json();
-                    
-                    const container = document.getElementById('latest-items');
-                    if (data.items && container) {
-                        // تفريغ المحتوى التجريبي ووضع بيانات لوحة التحكم
-                        container.innerHTML = ''; 
-                        data.items.forEach(item => {
-                            const cardHtml = `
-                                <div style="background: var(--card-color); border-radius: 10px; overflow: hidden; cursor: pointer;" onclick="openExternal('${item.link}')">
-                                    <img src="${item.img}" style="width: 100%; height: 100px; object-fit: cover;">
-                                    <div style="padding: 10px; font-size: 12px; text-align: center; font-weight: bold;">${item.name}</div>
-                                </div>
-                            `;
-                            container.insertAdjacentHTML('beforeend', cardHtml);
-                        });
-                    }
-                } catch (error) {
-                    console.error("خطأ في الاتصال بلوحة التحكم:", error);
-                }
-            }
-
-            // تشغيل المزامنة عند تحميل الصفحة
-            window.addEventListener('DOMContentLoaded', syncWithRomeoAdmin);
-            
-            // إضافة وظيفة تسجيل الخروج دون تعديل الكود القديم
-            window.addEventListener('click', function(e) {
-                if(e.target && (e.target.innerText === 'خروج' || e.target.innerText === 'تسجيل خروج')) {
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location.reload();
-                }
-            });
-        })();
+        // تشغيل عند التحميل
+        window.onload = () => {
+            fetchRomeoData();
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 500);
+            }, 1500);
+        };
     </script>
 </body>
 </html>
