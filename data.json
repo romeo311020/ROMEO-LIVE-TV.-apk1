@@ -1,0 +1,38 @@
+{
+  "categories": [
+    { "id": "ramadan", "name": "مسلسلات رمضان", "parent": "series" },
+    { "id": "egy-movies", "name": "أفلام مصرية", "parent": "movies" },
+    { "id": "music-hits", "name": "أغاني حصرية", "parent": "music" },
+    { "id": "live-matches", "name": "مباريات اليوم", "parent": "matches" }
+  ],
+  "items": [
+    {
+      "id": 1713129600000,
+      "name": "مباراة الأهلي القادمة",
+      "img": "https://example.com/match-poster.jpg",
+      "link": "https://server1.com/live",
+      "link2": "https://server2.com/live",
+      "download_url": "",
+      "cat": "live-matches",
+      "type": "movie",
+      "episodes": []
+    },
+    {
+      "id": 1713129700000,
+      "name": "مسلسل المداح",
+      "img": "https://example.com/madah.jpg",
+      "link": "",
+      "cat": "ramadan",
+      "type": "series",
+      "episodes": [
+        {
+          "num": "1",
+          "name": "الحلقة الأولى",
+          "link": "https://server1.com/ep1",
+          "link2": "https://server2.com/ep1",
+          "download_url": "https://download.com/ep1"
+        }
+      ]
+    }
+  ]
+}
